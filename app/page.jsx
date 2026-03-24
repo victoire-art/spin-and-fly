@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 const Globe = dynamic(() => import('./components/Globe'), { ssr: false });
 import SpinButton from './components/SpinButton';
 import Pin from './components/Pin';
-import ResultPopup from './components/ResultPopup';
+import ResultPanel from './components/ResultPopup';
 import countries from './data/countries';
 
 export default function Home() {
@@ -19,7 +19,6 @@ export default function Home() {
   const [funFact, setFunFact]             = useState(null);
   const [slackMessage, setSlackMessage]   = useState(null);
 
-  // Hold the API promise so animation and fetch race each other
   const apiPromiseRef = useRef(null);
 
   function handleSpin() {
@@ -37,7 +36,6 @@ export default function Home() {
     setFunFact(null);
     setSlackMessage(null);
 
-    // Fire API call in parallel with the globe animation
     apiPromiseRef.current = fetch('/api/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -46,18 +44,14 @@ export default function Home() {
   }
 
   function handleAnimationComplete() {
-    console.log('[Page] handleAnimationComplete called');
     setIsSpinning(false);
     setShowPin(true);
 
-    // 500ms after pin drop, open popup in loading state
     setTimeout(() => {
-      console.log('[Page] opening popup');
       setShowPopup(true);
       setIsLoading(true);
       setIsDisabled(false);
 
-      // Resolve the API promise (already in flight)
       apiPromiseRef.current
         .then((data) => {
           setFunFact(data.fun_fact ?? null);
@@ -65,16 +59,10 @@ export default function Home() {
         })
         .catch(() => {
           setFunFact("Ce pays est plein de surprises qui n'attendent que toi !");
-          setSlackMessage("Salut [Manager], j'ai besoin de vacances de toute urgence. C'est une question de survie. ✈️🌍");
+          setSlackMessage("Salut Clara la boss, j'ai besoin de vacances de toute urgence. C'est une question de survie. ✈️🌍");
         })
-        .finally(() => {
-          setIsLoading(false);
-        });
+        .finally(() => setIsLoading(false));
     }, 500);
-  }
-
-  function handleClose() {
-    setShowPopup(false);
   }
 
   function handleRelaunch() {
@@ -84,47 +72,76 @@ export default function Home() {
   }
 
   return (
-    <main className="flex flex-col min-h-screen">
-      <header className="pt-14 pb-6 text-center">
-        <h1
-          style={{
-            fontFamily: "'Syne', sans-serif",
-            fontWeight: 800,
-            fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-            letterSpacing: '-0.02em',
-            background: 'linear-gradient(135deg, #c4b5fd 0%, #f0eaff 50%, #a78bfa 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-          }}
-        >
+    <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      {/* Header */}
+      <header style={{ paddingTop: '3rem', paddingBottom: '1.5rem', textAlign: 'center', position: 'relative', zIndex: 1 }}>
+        <h1 style={{
+          fontFamily: "'Syne', sans-serif",
+          fontWeight: 800,
+          fontSize: 'clamp(2rem, 4vw, 3rem)',
+          letterSpacing: '-0.02em',
+          background: 'linear-gradient(135deg, #c4b5fd 0%, #f0eaff 50%, #a78bfa 100%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+        }}>
           Spin & Fly ✈️
         </h1>
       </header>
 
-      <section className="flex-1 flex items-center justify-center" style={{ position: 'relative' }}>
-        <Globe
-          targetCountry={targetCountry}
-          isSpinning={isSpinning}
-          onAnimationComplete={handleAnimationComplete}
-        />
-        <Pin visible={showPin} />
-      </section>
+      {/* Two-column body */}
+      <div style={{
+        flex: 1,
+        display: 'flex',
+        alignItems: 'stretch',
+        position: 'relative',
+        zIndex: 1,
+      }}>
+        {/* LEFT — Globe */}
+        <div style={{
+          flex: showPopup ? '0 0 58%' : '1',
+          transition: 'flex 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'relative',
+          minWidth: 0,
+        }}>
+          <div style={{ position: 'relative', width: '100%' }}>
+            <Globe
+              targetCountry={targetCountry}
+              isSpinning={isSpinning}
+              onAnimationComplete={handleAnimationComplete}
+            />
+            <Pin visible={showPin} />
+          </div>
 
-      <div className="flex justify-center pb-16 pt-8">
-        <SpinButton onClick={handleSpin} disabled={isDisabled} />
+          <div style={{ paddingTop: '1.5rem', paddingBottom: '3rem' }}>
+            <SpinButton onClick={handleSpin} disabled={isDisabled} />
+          </div>
+        </div>
+
+        {/* RIGHT — Console panel */}
+        {showPopup && targetCountry && (
+          <div style={{
+            flex: '0 0 42%',
+            minWidth: 0,
+            display: 'flex',
+            alignItems: 'center',
+            padding: '1.5rem 2rem 3rem 1rem',
+          }}>
+            <ResultPanel
+              country={targetCountry}
+              funFact={funFact}
+              slackMessage={slackMessage}
+              isLoading={isLoading}
+              onClose={() => setShowPopup(false)}
+              onRelaunch={handleRelaunch}
+            />
+          </div>
+        )}
       </div>
-
-      {showPopup && targetCountry && (
-        <ResultPopup
-          country={targetCountry}
-          funFact={funFact}
-          slackMessage={slackMessage}
-          isLoading={isLoading}
-          onClose={handleClose}
-          onRelaunch={handleRelaunch}
-        />
-      )}
     </main>
   );
 }
