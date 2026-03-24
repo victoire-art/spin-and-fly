@@ -6,6 +6,7 @@ const Globe = dynamic(() => import('./components/Globe'), { ssr: false });
 import SpinButton from './components/SpinButton';
 import Pin from './components/Pin';
 import ResultPanel from './components/ResultPopup';
+import VictoryAnimation from './components/VictoryAnimation';
 import countries from './data/countries';
 
 export default function Home() {
@@ -18,6 +19,8 @@ export default function Home() {
   const [isLoading, setIsLoading]         = useState(false);
   const [funFact, setFunFact]             = useState(null);
   const [slackMessage, setSlackMessage]   = useState(null);
+  const [places, setPlaces]               = useState(null);
+  const [showVictory, setShowVictory]     = useState(false);
 
   const apiPromiseRef = useRef(null);
 
@@ -35,6 +38,8 @@ export default function Home() {
     setShowPopup(false);
     setFunFact(null);
     setSlackMessage(null);
+    setPlaces(null);
+    setShowVictory(false);
 
     apiPromiseRef.current = fetch('/api/generate', {
       method: 'POST',
@@ -45,24 +50,32 @@ export default function Home() {
 
   function handleAnimationComplete() {
     setIsSpinning(false);
-    setShowPin(true);
+    setShowVictory(true);
 
+    // Victory animation plays for 1.6s, then pin drops + popup opens
     setTimeout(() => {
-      setShowPopup(true);
-      setIsLoading(true);
-      setIsDisabled(false);
+      setShowVictory(false);
+      setShowPin(true);
 
-      apiPromiseRef.current
-        .then((data) => {
-          setFunFact(data.fun_fact ?? null);
-          setSlackMessage(data.slack_message ?? null);
-        })
-        .catch(() => {
-          setFunFact("Ce pays est plein de surprises qui n'attendent que toi !");
-          setSlackMessage("Salut Clara la boss, j'ai besoin de vacances de toute urgence. C'est une question de survie. ✈️🌍");
-        })
-        .finally(() => setIsLoading(false));
-    }, 500);
+      setTimeout(() => {
+        setShowPopup(true);
+        setIsLoading(true);
+        setIsDisabled(false);
+
+        apiPromiseRef.current
+          .then((data) => {
+            setFunFact(data.fun_fact ?? null);
+            setSlackMessage(data.slack_message ?? null);
+            setPlaces(data.places ?? null);
+          })
+          .catch(() => {
+            setFunFact("Ce pays est plein de surprises qui n'attendent que toi !");
+            setSlackMessage("Salut Clara la boss, j'ai besoin de vacances de toute urgence. C'est une question de survie. ✈️🌍");
+            setPlaces(null);
+          })
+          .finally(() => setIsLoading(false));
+      }, 500);
+    }, 1600);
   }
 
   function handleRelaunch() {
@@ -117,6 +130,7 @@ export default function Home() {
               onAnimationComplete={handleAnimationComplete}
             />
             <Pin visible={showPin} />
+            <VictoryAnimation visible={showVictory} />
           </div>
 
           <div style={{ flexShrink: 0, paddingTop: '1rem', paddingBottom: '1.5rem' }}>
@@ -137,6 +151,7 @@ export default function Home() {
               country={targetCountry}
               funFact={funFact}
               slackMessage={slackMessage}
+              places={places}
               isLoading={isLoading}
               onClose={() => setShowPopup(false)}
               onRelaunch={handleRelaunch}

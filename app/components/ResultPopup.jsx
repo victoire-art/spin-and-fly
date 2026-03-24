@@ -52,6 +52,7 @@ export default function ResultPopup({
   country,
   funFact,
   slackMessage,
+  places,
   isLoading,
   onClose,
   onRelaunch,
@@ -150,6 +151,32 @@ export default function ResultPopup({
               {slackMessage}
             </div>
           )}
+        </div>
+
+        {/* Places to visit */}
+        <div>
+          <p style={{ fontWeight: 600, color: 'rgba(255,255,255,0.45)', fontSize: '0.72rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+            📍 À visiter
+          </p>
+          {isLoading ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <Skeleton height={52} /><Skeleton height={52} /><Skeleton height={52} />
+            </div>
+          ) : places ? (
+            <div className="content-fade" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              {places.map((place, i) => (
+                <div key={i} style={{
+                  background: 'rgba(255,255,255,0.05)',
+                  borderRadius: '0.65rem',
+                  padding: '0.6rem 0.75rem',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                }}>
+                  <div style={{ fontWeight: 700, color: 'rgba(255,255,255,0.88)', fontSize: '0.83rem' }}>{place.name}</div>
+                  <div style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.78rem', marginTop: '0.2rem', lineHeight: 1.5 }}>{place.desc}</div>
+                </div>
+              ))}
+            </div>
+          ) : null}
         </div>
 
         {/* CTAs */}
