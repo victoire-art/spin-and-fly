@@ -45,27 +45,32 @@ export default function Home() {
     }).then((r) => r.json());
   }
 
-  async function handleAnimationComplete() {
+  function handleAnimationComplete() {
+    console.log('[Page] handleAnimationComplete called');
     setIsSpinning(false);
     setShowPin(true);
 
-    // Wait 500ms then open popup in loading state
-    await new Promise((r) => setTimeout(r, 500));
-    setShowPopup(true);
-    setIsLoading(true);
-    setIsDisabled(false);
+    // 500ms after pin drop, open popup in loading state
+    setTimeout(() => {
+      console.log('[Page] opening popup');
+      setShowPopup(true);
+      setIsLoading(true);
+      setIsDisabled(false);
 
-    // Await the API (may already be resolved)
-    try {
-      const data = await apiPromiseRef.current;
-      setFunFact(data.fun_fact ?? null);
-      setSlackMessage(data.slack_message ?? null);
-    } catch {
-      setFunFact("Ce pays est plein de surprises qui n'attendent que toi !");
-      setSlackMessage(`Salut [Manager], j'ai absolument besoin de vacances en ${targetCountry?.name} ✈️🌍 C'est une urgence cosmique. Je reviendrai transformé(e) et ultra-motivé(e), promis ! 🙏`);
-    } finally {
-      setIsLoading(false);
-    }
+      // Resolve the API promise (already in flight)
+      apiPromiseRef.current
+        .then((data) => {
+          setFunFact(data.fun_fact ?? null);
+          setSlackMessage(data.slack_message ?? null);
+        })
+        .catch(() => {
+          setFunFact("Ce pays est plein de surprises qui n'attendent que toi !");
+          setSlackMessage("Salut [Manager], j'ai besoin de vacances de toute urgence. C'est une question de survie. ✈️🌍");
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }, 500);
   }
 
   function handleClose() {

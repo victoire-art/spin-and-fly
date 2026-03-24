@@ -81,6 +81,7 @@ export default function Globe({ targetCountry, isSpinning, onAnimationComplete }
         );
         animRef.current = setTimeout(() => {
           controls.enabled = true;
+          console.log('[Globe] calling onAnimationComplete');
           onAnimationComplete?.();
         }, 1150);
       }
