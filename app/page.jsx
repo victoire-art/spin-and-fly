@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Globe from './components/Globe';
+import dynamic from 'next/dynamic';
+const Globe = dynamic(() => import('./components/Globe'), { ssr: false });
 import SpinButton from './components/SpinButton';
 import Pin from './components/Pin';
 import countries from './data/countries';
