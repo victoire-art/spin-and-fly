@@ -54,8 +54,8 @@ export default function Globe({ targetCountry, isSpinning, onAnimationComplete }
     controls.enabled = false;
     controls.autoRotate = true;
 
-    const SPIN_MS = 4500;   // full-speed spin
-    const DECEL_MS = 1200;  // deceleration ramp
+    const SPIN_MS = 8000;   // full-speed spin
+    const DECEL_MS = 1800;  // deceleration ramp
     const MAX_SPEED = 14;
     const start = performance.now();
     let landingTriggered = false;

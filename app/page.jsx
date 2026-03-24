@@ -50,14 +50,15 @@ export default function Home() {
 
   function handleAnimationComplete() {
     setIsSpinning(false);
-    setShowVictory(true);
+    setShowPin(true);  // pin drops first
 
-    // Victory animation plays for 1.6s, then pin drops + popup opens
+    // After pin lands (~700ms), show victory
     setTimeout(() => {
-      setShowVictory(false);
-      setShowPin(true);
+      setShowVictory(true);
 
+      // After victory fades (~1.8s), open popup
       setTimeout(() => {
+        setShowVictory(false);
         setShowPopup(true);
         setIsLoading(true);
         setIsDisabled(false);
@@ -74,8 +75,8 @@ export default function Home() {
             setPlaces(null);
           })
           .finally(() => setIsLoading(false));
-      }, 500);
-    }, 1600);
+      }, 1800);
+    }, 700);
   }
 
   function handleRelaunch() {
