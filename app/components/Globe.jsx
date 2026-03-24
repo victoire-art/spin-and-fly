@@ -51,7 +51,10 @@ export default function Globe({ targetCountry, isSpinning, onAnimationComplete }
     if (animRef.current) cancelAnimationFrame(animRef.current);
 
     const controls = globeEl.current.controls();
-    controls.enabled = false;
+    // Disable user interaction but NOT the whole controller (enabled=false kills autoRotate too)
+    controls.enableZoom = false;
+    controls.enableRotate = false;
+    controls.enablePan = false;
     controls.autoRotate = true;
 
     const SPIN_MS = 8000;   // full-speed spin
@@ -82,8 +85,9 @@ export default function Globe({ targetCountry, isSpinning, onAnimationComplete }
           1100
         );
         animRef.current = setTimeout(() => {
-          controls.enabled = true;
-          console.log('[Globe] calling onAnimationComplete');
+          controls.enableZoom = true;
+          controls.enableRotate = true;
+          controls.enablePan = true;
           onAnimationComplete?.();
         }, 1150);
       }
