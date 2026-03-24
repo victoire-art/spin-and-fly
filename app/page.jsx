@@ -72,13 +72,13 @@ export default function Home() {
   }
 
   return (
-    <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <main style={{ height: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
       {/* Header */}
-      <header style={{ paddingTop: '3rem', paddingBottom: '1.5rem', textAlign: 'center', position: 'relative', zIndex: 1 }}>
+      <header style={{ flexShrink: 0, paddingTop: '2rem', paddingBottom: '1rem', textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <h1 style={{
           fontFamily: "'Syne', sans-serif",
           fontWeight: 800,
-          fontSize: 'clamp(2rem, 4vw, 3rem)',
+          fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)',
           letterSpacing: '-0.02em',
           background: 'linear-gradient(135deg, #c4b5fd 0%, #f0eaff 50%, #a78bfa 100%)',
           WebkitBackgroundClip: 'text',
@@ -89,17 +89,18 @@ export default function Home() {
         </h1>
       </header>
 
-      {/* Two-column body */}
+      {/* Two-column body — fills remaining height */}
       <div style={{
         flex: 1,
+        minHeight: 0,
         display: 'flex',
         alignItems: 'stretch',
         position: 'relative',
         zIndex: 1,
       }}>
-        {/* LEFT — Globe */}
+        {/* LEFT — Globe + button */}
         <div style={{
-          flex: showPopup ? '0 0 58%' : '1',
+          flex: showPopup ? '0 0 55%' : '1',
           transition: 'flex 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
           display: 'flex',
           flexDirection: 'column',
@@ -107,8 +108,9 @@ export default function Home() {
           justifyContent: 'center',
           position: 'relative',
           minWidth: 0,
+          overflow: 'hidden',
         }}>
-          <div style={{ position: 'relative', width: '100%' }}>
+          <div style={{ position: 'relative', width: '100%', flex: 1, minHeight: 0 }}>
             <Globe
               targetCountry={targetCountry}
               isSpinning={isSpinning}
@@ -117,7 +119,7 @@ export default function Home() {
             <Pin visible={showPin} />
           </div>
 
-          <div style={{ paddingTop: '1.5rem', paddingBottom: '3rem' }}>
+          <div style={{ flexShrink: 0, paddingTop: '1rem', paddingBottom: '1.5rem' }}>
             <SpinButton onClick={handleSpin} disabled={isDisabled} />
           </div>
         </div>
@@ -125,11 +127,11 @@ export default function Home() {
         {/* RIGHT — Console panel */}
         {showPopup && targetCountry && (
           <div style={{
-            flex: '0 0 42%',
+            flex: '0 0 45%',
             minWidth: 0,
             display: 'flex',
-            alignItems: 'center',
-            padding: '1.5rem 2rem 3rem 1rem',
+            alignItems: 'stretch',
+            padding: '1rem 1.5rem 1.5rem 0.75rem',
           }}>
             <ResultPanel
               country={targetCountry}
