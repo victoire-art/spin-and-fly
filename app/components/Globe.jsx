@@ -33,13 +33,15 @@ export default function Globe({ targetCountry, isSpinning, onAnimationComplete }
     return () => obs.disconnect();
   }, []);
 
-  // Init auto-rotation
+  // Init auto-rotation + cinematic tilt
   useEffect(() => {
     if (!globeEl.current) return;
     const controls = globeEl.current.controls();
     controls.autoRotate = true;
     controls.autoRotateSpeed = 0.3;
     controls.enableDamping = true;
+    // Slight lat tilt for a more cinematic angle
+    globeEl.current.pointOfView({ lat: 12, lng: 0, altitude: 2.2 });
   }, []);
 
   // Spin animation
@@ -102,8 +104,8 @@ export default function Globe({ targetCountry, isSpinning, onAnimationComplete }
         width={dimensions.width}
         height={dimensions.height}
         backgroundColor="#0a1628"
-        atmosphereColor="#3a86ff"
-        atmosphereAltitude={0.15}
+        atmosphereColor="#7c3aed"
+        atmosphereAltitude={0.22}
         polygonsData={countries}
         polygonCapColor={(feat) =>
           COUNTRY_COLORS[countries.indexOf(feat) % COUNTRY_COLORS.length]

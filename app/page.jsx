@@ -91,8 +91,11 @@ export default function Home() {
             fontFamily: "'Syne', sans-serif",
             fontWeight: 800,
             fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-            color: '#f0eaff',
             letterSpacing: '-0.02em',
+            background: 'linear-gradient(135deg, #c4b5fd 0%, #f0eaff 50%, #a78bfa 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
           }}
         >
           Spin & Fly ✈️

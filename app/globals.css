@@ -12,4 +12,68 @@ body {
   min-height: 100vh;
   background: linear-gradient(to bottom, #0f0a1a, #1a1145);
   font-family: 'Outfit', sans-serif;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ── Stars layer 1 ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(circle 1px at  4%  8%, rgba(255,255,255,0.55) 0%, transparent 100%),
+    radial-gradient(circle 1px at 12% 22%, rgba(255,255,255,0.40) 0%, transparent 100%),
+    radial-gradient(circle 1px at 23%  5%, rgba(255,255,255,0.50) 0%, transparent 100%),
+    radial-gradient(circle 1px at 35% 18%, rgba(255,255,255,0.35) 0%, transparent 100%),
+    radial-gradient(circle 1px at 47%  3%, rgba(255,255,255,0.45) 0%, transparent 100%),
+    radial-gradient(circle 1px at 58% 14%, rgba(255,255,255,0.30) 0%, transparent 100%),
+    radial-gradient(circle 1px at 70%  7%, rgba(255,255,255,0.50) 0%, transparent 100%),
+    radial-gradient(circle 1px at 82% 20%, rgba(255,255,255,0.40) 0%, transparent 100%),
+    radial-gradient(circle 1px at 91%  2%, rgba(255,255,255,0.45) 0%, transparent 100%),
+    radial-gradient(circle 1px at  7% 55%, rgba(255,255,255,0.30) 0%, transparent 100%),
+    radial-gradient(circle 1px at 19% 68%, rgba(255,255,255,0.40) 0%, transparent 100%),
+    radial-gradient(circle 1px at 31% 80%, rgba(255,255,255,0.35) 0%, transparent 100%),
+    radial-gradient(circle 1px at 44% 72%, rgba(255,255,255,0.25) 0%, transparent 100%),
+    radial-gradient(circle 1px at 55% 88%, rgba(255,255,255,0.40) 0%, transparent 100%),
+    radial-gradient(circle 1px at 66% 62%, rgba(255,255,255,0.30) 0%, transparent 100%),
+    radial-gradient(circle 1px at 77% 78%, rgba(255,255,255,0.45) 0%, transparent 100%),
+    radial-gradient(circle 1px at 88% 55%, rgba(255,255,255,0.35) 0%, transparent 100%),
+    radial-gradient(circle 1px at 95% 90%, rgba(255,255,255,0.30) 0%, transparent 100%);
+  animation: twinkle1 4s ease-in-out infinite alternate;
+}
+
+/* ── Stars layer 2 (offset phase) ── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(circle 1px at  9% 35%, rgba(255,255,255,0.35) 0%, transparent 100%),
+    radial-gradient(circle 1px at 27% 42%, rgba(255,255,255,0.45) 0%, transparent 100%),
+    radial-gradient(circle 1px at 40% 50%, rgba(255,255,255,0.30) 0%, transparent 100%),
+    radial-gradient(circle 1px at 52% 28%, rgba(255,255,255,0.50) 0%, transparent 100%),
+    radial-gradient(circle 1px at 63% 45%, rgba(255,255,255,0.35) 0%, transparent 100%),
+    radial-gradient(circle 1px at 74% 32%, rgba(255,255,255,0.40) 0%, transparent 100%),
+    radial-gradient(circle 1px at 86% 38%, rgba(255,255,255,0.30) 0%, transparent 100%),
+    radial-gradient(circle 1px at 15% 92%, rgba(255,255,255,0.40) 0%, transparent 100%),
+    radial-gradient(circle 1px at 38% 96%, rgba(255,255,255,0.35) 0%, transparent 100%),
+    radial-gradient(circle 1px at 60% 95%, rgba(255,255,255,0.45) 0%, transparent 100%),
+    radial-gradient(circle 1px at 80% 98%, rgba(255,255,255,0.30) 0%, transparent 100%),
+    radial-gradient(circle 1px at 97% 48%, rgba(255,255,255,0.40) 0%, transparent 100%),
+    radial-gradient(circle 1px at  2% 75%, rgba(255,255,255,0.35) 0%, transparent 100%);
+  animation: twinkle2 5s ease-in-out 2s infinite alternate;
+}
+
+@keyframes twinkle1 {
+  0%   { opacity: 0.4; }
+  100% { opacity: 1;   }
+}
+@keyframes twinkle2 {
+  0%   { opacity: 0.6; }
+  100% { opacity: 0.2; }
 }

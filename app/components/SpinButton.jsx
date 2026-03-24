@@ -2,14 +2,26 @@
 
 const styles = `
   @keyframes shake {
-    0%   { transform: translateX(0); }
+    0%   { transform: translateX(0) rotate(0); }
     15%  { transform: translateX(-6px) rotate(-1deg); }
     30%  { transform: translateX(6px) rotate(1deg); }
     45%  { transform: translateX(-5px) rotate(-0.5deg); }
     60%  { transform: translateX(5px) rotate(0.5deg); }
-    75%  { transform: translateX(-3px); }
-    90%  { transform: translateX(3px); }
-    100% { transform: translateX(0); }
+    75%  { transform: translateX(-3px) rotate(0); }
+    90%  { transform: translateX(3px) rotate(0); }
+    100% { transform: translateX(0) rotate(0); }
+  }
+
+  @keyframes btnGlow {
+    0%, 100% { box-shadow: 0 0 18px rgba(247,37,133,0.3), 0 4px 16px rgba(0,0,0,0.3); }
+    50%       { box-shadow: 0 0 38px rgba(247,37,133,0.65), 0 6px 22px rgba(0,0,0,0.35); }
+  }
+
+  @keyframes dots {
+    0%   { content: ''; }
+    33%  { content: '.'; }
+    66%  { content: '..'; }
+    100% { content: '...'; }
   }
 
   .spin-btn {
@@ -23,18 +35,26 @@ const styles = `
     border-radius: 9999px;
     cursor: pointer;
     letter-spacing: 0.01em;
-    box-shadow: 0 0 24px rgba(247, 37, 133, 0.35), 0 4px 20px rgba(0,0,0,0.3);
-    transition: box-shadow 0.2s ease, opacity 0.2s ease;
+    will-change: transform, box-shadow;
+    animation: btnGlow 3s ease-in-out infinite;
+    transition: opacity 0.2s ease;
   }
 
   .spin-btn:not(:disabled):hover {
-    animation: shake 0.45s ease;
-    box-shadow: 0 0 44px rgba(247, 37, 133, 0.65), 0 6px 28px rgba(0,0,0,0.4);
+    animation: shake 0.45s ease forwards;
+    box-shadow: 0 0 50px rgba(247,37,133,0.7), 0 6px 28px rgba(0,0,0,0.4);
   }
 
   .spin-btn:disabled {
-    opacity: 0.45;
+    opacity: 0.6;
     cursor: not-allowed;
+    animation: none;
+    box-shadow: 0 0 14px rgba(247,37,133,0.2);
+  }
+
+  .spin-btn:disabled::after {
+    content: '';
+    animation: dots 1.2s steps(1) infinite;
   }
 `;
 
@@ -43,7 +63,7 @@ export default function SpinButton({ onClick, disabled }) {
     <>
       <style>{styles}</style>
       <button className="spin-btn" onClick={onClick} disabled={disabled}>
-        🎯 Où est-ce que je pars ?
+        {disabled ? '✈️ En route' : '🎯 Où est-ce que je pars ?'}
       </button>
     </>
   );

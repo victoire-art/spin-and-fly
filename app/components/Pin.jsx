@@ -4,23 +4,31 @@ import { useEffect, useState } from 'react';
 
 const styles = `
   @keyframes pinDrop {
-    0%   { transform: translate(-50%, -100%) translateY(-120vh) scaleY(1.3); opacity: 0; }
-    65%  { transform: translate(-50%, -100%) translateY(0) scaleY(1); opacity: 1; }
-    75%  { transform: translate(-50%, -100%) translateY(-14px) scaleY(0.94); }
-    85%  { transform: translate(-50%, -100%) translateY(0) scaleY(1.04); }
-    93%  { transform: translate(-50%, -100%) translateY(-5px) scaleY(0.98); }
+    0%   { transform: translate(-50%, -100%) translateY(-120vh) scaleY(1.2); opacity: 0; }
+    60%  { transform: translate(-50%, -100%) translateY(0) scaleY(1.05); opacity: 1; }
+    72%  { transform: translate(-50%, -100%) translateY(-12px) scaleY(0.95); }
+    84%  { transform: translate(-50%, -100%) translateY(0) scaleY(1.02); }
+    93%  { transform: translate(-50%, -100%) translateY(-4px) scaleY(0.99); }
     100% { transform: translate(-50%, -100%) translateY(0) scaleY(1); }
   }
 
   @keyframes pinPulse {
     0%, 100% {
       transform: translate(-50%, -100%) scale(1);
-      filter: drop-shadow(0 4px 10px rgba(192,57,43,0.4));
+      filter: drop-shadow(0 3px 8px rgba(192,57,43,0.35));
     }
     50% {
-      transform: translate(-50%, -100%) scale(1.12);
-      filter: drop-shadow(0 6px 22px rgba(255,80,80,0.85));
+      transform: translate(-50%, -100%) scale(1.07);
+      filter: drop-shadow(0 5px 16px rgba(255,80,80,0.65));
     }
+  }
+
+  .pin-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    will-change: transform, filter;
+    transform-origin: center bottom;
   }
 `;
 
@@ -48,15 +56,12 @@ export default function Pin({ visible }) {
         }}
       >
         <svg
+          className="pin-svg"
           style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            transformOrigin: 'center bottom',
             animation:
               phase === 'drop'
-                ? 'pinDrop 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards'
-                : 'pinPulse 2s ease-in-out infinite',
+                ? 'pinDrop 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards'
+                : 'pinPulse 2.5s ease-in-out infinite',
           }}
           onAnimationEnd={() => {
             if (phase === 'drop') setPhase('pulse');
