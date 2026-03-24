@@ -1,18 +1,26 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 const Globe = dynamic(() => import('./components/Globe'), { ssr: false });
 import SpinButton from './components/SpinButton';
 import Pin from './components/Pin';
+import ResultPopup from './components/ResultPopup';
 import countries from './data/countries';
 
 export default function Home() {
-  const [lastCountry, setLastCountry] = useState(null);
+  const [lastCountry, setLastCountry]     = useState(null);
   const [targetCountry, setTargetCountry] = useState(null);
-  const [isSpinning, setIsSpinning] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
-  const [showPin, setShowPin] = useState(false);
+  const [isSpinning, setIsSpinning]       = useState(false);
+  const [isDisabled, setIsDisabled]       = useState(false);
+  const [showPin, setShowPin]             = useState(false);
+  const [showPopup, setShowPopup]         = useState(false);
+  const [isLoading, setIsLoading]         = useState(false);
+  const [funFact, setFunFact]             = useState(null);
+  const [slackMessage, setSlackMessage]   = useState(null);
+
+  // Hold the API promise so animation and fetch race each other
+  const apiPromiseRef = useRef(null);
 
   function handleSpin() {
     let pick;
@@ -25,13 +33,49 @@ export default function Home() {
     setIsSpinning(true);
     setIsDisabled(true);
     setShowPin(false);
+    setShowPopup(false);
+    setFunFact(null);
+    setSlackMessage(null);
+
+    // Fire API call in parallel with the globe animation
+    apiPromiseRef.current = fetch('/api/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ country: pick.name }),
+    }).then((r) => r.json());
   }
 
-  function handleAnimationComplete() {
+  async function handleAnimationComplete() {
     setIsSpinning(false);
-    setIsDisabled(false);
     setShowPin(true);
-    console.log(`Animation terminée, pays: ${targetCountry?.name}`);
+
+    // Wait 500ms then open popup in loading state
+    await new Promise((r) => setTimeout(r, 500));
+    setShowPopup(true);
+    setIsLoading(true);
+    setIsDisabled(false);
+
+    // Await the API (may already be resolved)
+    try {
+      const data = await apiPromiseRef.current;
+      setFunFact(data.fun_fact ?? null);
+      setSlackMessage(data.slack_message ?? null);
+    } catch {
+      setFunFact("Ce pays est plein de surprises qui n'attendent que toi !");
+      setSlackMessage(`Salut [Manager], j'ai absolument besoin de vacances en ${targetCountry?.name} ✈️🌍 C'est une urgence cosmique. Je reviendrai transformé(e) et ultra-motivé(e), promis ! 🙏`);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  function handleClose() {
+    setShowPopup(false);
+  }
+
+  function handleRelaunch() {
+    setShowPopup(false);
+    setShowPin(false);
+    handleSpin();
   }
 
   return (
@@ -59,20 +103,20 @@ export default function Home() {
         <Pin visible={showPin} />
       </section>
 
-      <div className="flex flex-col items-center gap-5 pb-16 pt-8">
+      <div className="flex justify-center pb-16 pt-8">
         <SpinButton onClick={handleSpin} disabled={isDisabled} />
-        {targetCountry && !isSpinning && (
-          <p style={{
-            fontFamily: "'Syne', sans-serif",
-            fontWeight: 700,
-            fontSize: 'clamp(1.3rem, 3vw, 2rem)',
-            color: '#f0eaff',
-            letterSpacing: '-0.01em',
-          }}>
-            {targetCountry.emoji} {targetCountry.name}
-          </p>
-        )}
       </div>
+
+      {showPopup && targetCountry && (
+        <ResultPopup
+          country={targetCountry}
+          funFact={funFact}
+          slackMessage={slackMessage}
+          isLoading={isLoading}
+          onClose={handleClose}
+          onRelaunch={handleRelaunch}
+        />
+      )}
     </main>
   );
 }
