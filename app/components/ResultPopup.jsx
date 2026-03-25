@@ -114,22 +114,6 @@ export default function ResultPopup({
 
         <hr style={{ border: 'none', borderTop: '1px solid rgba(255,255,255,0.1)' }} />
 
-        {/* Fun fact */}
-        <div>
-          <p style={{ fontWeight: 600, color: 'rgba(255,255,255,0.45)', fontSize: '0.72rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-            🌍 Le savais-tu ?
-          </p>
-          {isLoading ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <Skeleton height={13} /><Skeleton height={13} /><Skeleton height={13} width="65%" />
-            </div>
-          ) : (
-            <p className="content-fade" style={{ color: 'rgba(255,255,255,0.78)', fontSize: '0.92rem', lineHeight: 1.65 }}>
-              {funFact}
-            </p>
-          )}
-        </div>
-
         {/* Slack message */}
         <div style={{ flex: 1 }}>
           <p style={{ fontWeight: 600, color: 'rgba(255,255,255,0.45)', fontSize: '0.72rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
@@ -150,6 +134,22 @@ export default function ResultPopup({
             }}>
               {slackMessage}
             </div>
+          )}
+        </div>
+
+        {/* Fun fact */}
+        <div>
+          <p style={{ fontWeight: 600, color: 'rgba(255,255,255,0.45)', fontSize: '0.72rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+            🌍 Le savais-tu ?
+          </p>
+          {isLoading ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <Skeleton height={13} /><Skeleton height={13} /><Skeleton height={13} width="65%" />
+            </div>
+          ) : (
+            <p className="content-fade" style={{ color: 'rgba(255,255,255,0.78)', fontSize: '0.92rem', lineHeight: 1.65 }}>
+              {funFact}
+            </p>
           )}
         </div>
 
