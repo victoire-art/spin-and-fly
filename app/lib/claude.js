@@ -65,15 +65,18 @@ const PLACES_SETS = [
   ],
 ];
 
+import countryContent from '../data/countryContent.js';
+
 function pick(arr, seed) {
   return arr[seed % arr.length];
 }
 
 export async function generateContent(countryName) {
   const seed = countryName.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+  const real = countryContent[countryName];
   return {
-    fun_fact: pick(FUN_FACTS, seed)(countryName),
+    fun_fact: real?.fun_fact ?? pick(FUN_FACTS, seed)(countryName),
     slack_message: pick(SLACK_MESSAGES, seed + 3)(countryName),
-    places: pick(PLACES_SETS, seed + 7)(countryName),
+    places: real?.places ?? pick(PLACES_SETS, seed + 7)(countryName),
   };
 }
