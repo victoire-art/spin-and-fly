@@ -114,29 +114,6 @@ export default function ResultPopup({
 
         <hr style={{ border: 'none', borderTop: '1px solid rgba(255,255,255,0.1)' }} />
 
-        {/* Slack message */}
-        <div style={{ flex: 1 }}>
-          <p style={{ fontWeight: 600, color: 'rgba(255,255,255,0.45)', fontSize: '0.72rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-            💬 Message pour Clara la boss
-          </p>
-          {isLoading ? (
-            <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '0.75rem', padding: '0.75rem', display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <Skeleton height={13} /><Skeleton height={13} /><Skeleton height={13} /><Skeleton height={13} width="70%" />
-            </div>
-          ) : (
-            <div className="content-fade" style={{
-              background: 'rgba(255,255,255,0.06)',
-              borderRadius: '0.75rem', padding: '0.9rem',
-              color: 'rgba(255,255,255,0.82)', fontSize: '0.86rem',
-              lineHeight: 1.65, fontFamily: "'Outfit', sans-serif",
-              whiteSpace: 'pre-wrap',
-              border: '1px solid rgba(255,255,255,0.08)',
-            }}>
-              {slackMessage}
-            </div>
-          )}
-        </div>
-
         {/* Fun fact */}
         <div>
           <p style={{ fontWeight: 600, color: 'rgba(255,255,255,0.45)', fontSize: '0.72rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
@@ -177,6 +154,29 @@ export default function ResultPopup({
               ))}
             </div>
           ) : null}
+        </div>
+
+        {/* Slack message */}
+        <div>
+          <p style={{ fontWeight: 600, color: 'rgba(255,255,255,0.45)', fontSize: '0.72rem', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+            💬 Message pour Clara la boss
+          </p>
+          {isLoading ? (
+            <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '0.75rem', padding: '0.75rem', display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <Skeleton height={13} /><Skeleton height={13} /><Skeleton height={13} /><Skeleton height={13} width="70%" />
+            </div>
+          ) : (
+            <div className="content-fade" style={{
+              background: 'rgba(255,255,255,0.06)',
+              borderRadius: '0.75rem', padding: '0.9rem',
+              color: 'rgba(255,255,255,0.82)', fontSize: '0.86rem',
+              lineHeight: 1.65, fontFamily: "'Outfit', sans-serif",
+              whiteSpace: 'pre-wrap',
+              border: '1px solid rgba(255,255,255,0.08)',
+            }}>
+              {slackMessage}
+            </div>
+          )}
         </div>
 
         {/* CTAs */}

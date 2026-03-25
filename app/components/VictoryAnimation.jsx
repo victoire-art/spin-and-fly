@@ -93,7 +93,7 @@ export default function VictoryAnimation({ visible }) {
             marginTop: '0.25rem',
             letterSpacing: '-0.02em',
           }}>
-            Victoire !
+            Youpi !!
           </div>
         </div>
       </div>
