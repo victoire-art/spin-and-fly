@@ -7,7 +7,10 @@ import SpinButton from './components/SpinButton';
 import Pin from './components/Pin';
 import ResultPanel from './components/ResultPopup';
 import VictoryAnimation from './components/VictoryAnimation';
-import countries from './data/countries';
+import allCountries from './data/countries';
+import countryContent from './data/countryContent';
+
+const countries = allCountries.filter((c) => countryContent[c.name]);
 
 export default function Home() {
   const [lastCountry, setLastCountry]     = useState(null);
